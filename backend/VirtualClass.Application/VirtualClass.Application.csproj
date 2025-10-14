@@ -6,4 +6,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\VirtualClass.Core\VirtualClass.Core.csproj" />
+    <ProjectReference Include="..\VirtualClass.Infrastructure\VirtualClass.Infrastructure.csproj" />
+  </ItemGroup>
+
 </Project>
