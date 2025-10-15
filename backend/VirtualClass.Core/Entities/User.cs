@@ -2,6 +2,20 @@
 {
     public class User : BaseEntity
     {
+        public User(string fullName, string email, string passwordHash)
+        {
+            FullName = fullName;
+            Email = email;
+            PasswordHash = passwordHash;
+            CreatedAt = DateTime.UtcNow;
+        }
+
+        public User(string email, Role role)
+        {
+            Email = email;
+            Role = role;
+        }
+
         public string FullName { get; private set; } = string.Empty;
         public string Email { get; private set; } = string.Empty;
         public string PasswordHash { get; private set; } = string.Empty;
