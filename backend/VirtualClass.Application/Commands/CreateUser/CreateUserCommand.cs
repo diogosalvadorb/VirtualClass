@@ -5,9 +5,9 @@ namespace VirtualClass.Application.Commands.CreateUser
 {
     public class CreateUserCommand : IRequest<CreateUserViewModel>
     {
-        public CreateUserCommand(string name, string email, string password)
+        public CreateUserCommand(string fullName, string email, string password)
         {
-            FullName = name;
+            FullName = fullName;
             Email = email;
             Password = password;
         }

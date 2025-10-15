@@ -7,7 +7,7 @@
             FullName = fullName;
             Email = email;
             PasswordHash = passwordHash;
-            CreatedAt = DateTime.UtcNow;
+            CreatedAt = DateTime.Now;
             RoleId = 2;
         }
 
@@ -17,5 +17,13 @@
         public int RoleId { get; private set; }
         public Role Role { get; private set; } = null!;
         public DateTime CreatedAt { get; private set; } = DateTime.UtcNow;
+        public bool IsEmailConfirmed { get; private set; }
+        public string? EmailConfirmationToken { get; private set; }
+
+        public void ConfirmEmail()
+        {
+            IsEmailConfirmed = true;
+            EmailConfirmationToken = null;
+        }
     }
 }
