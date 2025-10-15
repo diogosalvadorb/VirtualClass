@@ -3,7 +3,7 @@ using VirtualClass.Application.ViewModel;
 using VirtualClass.Core.Repository;
 using VirtualClass.Core.Services;
 
-namespace VirtualClass.Application.Commands.LoginUser
+namespace VirtualClass.Application.Commands.UserCommands.LoginUser
 {
     public class LoginUserHandler : IRequestHandler<LoginUserCommand, LoginUserViewModel>
     {

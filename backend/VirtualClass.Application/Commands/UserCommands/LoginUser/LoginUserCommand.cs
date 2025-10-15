@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using VirtualClass.Application.ViewModel;
 
-namespace VirtualClass.Application.Commands.LoginUser
+namespace VirtualClass.Application.Commands.UserCommands.LoginUser
 {
     public class LoginUserCommand : IRequest<LoginUserViewModel>
     {
