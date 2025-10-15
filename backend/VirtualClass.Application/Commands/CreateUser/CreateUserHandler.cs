@@ -20,7 +20,7 @@ namespace VirtualClass.Application.Commands.CreateUser
         {
             var passwordHash = _authService.ComputerSha256Hash(request.Password);
 
-            var user = new User(request.Name, request.Email, passwordHash);
+            var user = new User(request.FullName, request.Email, passwordHash);
 
             await _repository.CreateUserAsync(user);
 

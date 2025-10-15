@@ -8,12 +8,7 @@
             Email = email;
             PasswordHash = passwordHash;
             CreatedAt = DateTime.UtcNow;
-        }
-
-        public User(string email, Role role)
-        {
-            Email = email;
-            Role = role;
+            RoleId = 2;
         }
 
         public string FullName { get; private set; } = string.Empty;
