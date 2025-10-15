@@ -7,6 +7,7 @@ using VirtualClass.Application.Commands.UserCommands.ConfirmEmail;
 using VirtualClass.Application.Commands.UserCommands.CreateUser;
 using VirtualClass.Application.Commands.UserCommands.ForgotPassword;
 using VirtualClass.Application.Commands.UserCommands.LoginUser;
+using VirtualClass.Application.Commands.UserCommands.RecoverPassword;
 using VirtualClass.Application.Queries.UserQueries.GetUserById;
 
 namespace VirtualClass.API.Controllers
@@ -109,6 +110,25 @@ namespace VirtualClass.API.Controllers
             {
                 message = "Se o email existir em nossa base, você receberá instruções para redefinir sua senha."
             });
+        }
+
+        [HttpPost("recover-password")]
+        [AllowAnonymous]
+        public async Task<IActionResult> RecoverPassword([FromBody] RecoverPasswordCommand command)
+        {
+            if (string.IsNullOrEmpty(command.Token) || string.IsNullOrEmpty(command.NewPassword))
+            {
+                return BadRequest(new { message = "Token e nova senha são obrigatórios." });
+            }
+
+            var result = await _mediator.Send(command);
+
+            if (!result)
+            {
+                return BadRequest(new { message = "Token inválido ou expirado." });
+            }
+
+            return Ok(new { message = "Senha recuperada com sucesso! Você já pode fazer login." });
         }
     }
 }

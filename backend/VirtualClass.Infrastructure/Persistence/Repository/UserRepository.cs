@@ -14,7 +14,9 @@ namespace VirtualClass.Infrastructure.Persistence.Repository
 
         public async Task<User?> GetUserByIdAsync(Guid id)
         {
-            return await _context.Users.SingleOrDefaultAsync(u => u.Id == id);
+            return await _context.Users
+                .Include(u => u.Role)
+                .SingleOrDefaultAsync(u => u.Id == id);
         }
 
         public async Task<User?> GetUserByEmailAsync(string email)
@@ -26,13 +28,23 @@ namespace VirtualClass.Infrastructure.Persistence.Repository
 
         public async Task<User?> GetUserByEmailAndPasswordAsync(string email, string password)
         {
-            return await _context.Users.Include(u => u.Role).SingleOrDefaultAsync(u => u.Email == email && u.PasswordHash == password);
+            return await _context.Users
+                .Include(u => u.Role)
+                .SingleOrDefaultAsync(u => u.Email == email && u.PasswordHash == password);
         }
 
         public async Task<User?> GetUserByEmailConfirmationTokenAsync(string token)
         {
-            return await _context.Users.Include(u => u.Role)
-                                       .SingleOrDefaultAsync(u => u.EmailConfirmationToken == token);
+            return await _context.Users
+                .Include(u => u.Role)
+                .SingleOrDefaultAsync(u => u.EmailConfirmationToken == token);
+        }
+
+        public async Task<User?> GetUserByPasswordResetTokenAsync(string token)
+        {
+            return await _context.Users
+                .Include(u => u.Role)
+                .SingleOrDefaultAsync(u => u.PasswordResetToken == token);
         }
 
         public async Task CreateUserAsync(User user)
