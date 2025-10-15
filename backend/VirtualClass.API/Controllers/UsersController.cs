@@ -1,8 +1,9 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using VirtualClass.Application.Commands.CreateUser;
-using VirtualClass.Application.Commands.LoginUser;
+using VirtualClass.Application.Commands.UserCommands.ConfirmEmail;
+using VirtualClass.Application.Commands.UserCommands.CreateUser;
+using VirtualClass.Application.Commands.UserCommands.LoginUser;
 using VirtualClass.Application.Queries.UserQueries.GetUserById;
 
 namespace VirtualClass.API.Controllers
@@ -52,6 +53,20 @@ namespace VirtualClass.API.Controllers
                 return BadRequest();
             }
             return Ok(login);
+        }
+
+        [HttpGet("confirm-email")]
+        [AllowAnonymous]
+        public async Task<IActionResult> ConfirmEmail([FromQuery] string token)
+        {
+            var command = new ConfirmEmailCommand(token);
+            var result = await _mediator.Send(command);
+            if (!result)
+            {
+                return BadRequest("Token inválido ou expirado.");
+            }
+
+            return Ok(new { message = "Email confirmado com sucesso! Você já pode fazer login." });
         }
     }
 }

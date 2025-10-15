@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using VirtualClass.Application.ViewModel;
 
-namespace VirtualClass.Application.Commands.CreateUser
+namespace VirtualClass.Application.Commands.UserCommands.CreateUser
 {
     public class CreateUserCommand : IRequest<CreateUserViewModel>
     {

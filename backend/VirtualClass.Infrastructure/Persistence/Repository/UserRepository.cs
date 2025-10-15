@@ -22,9 +22,21 @@ namespace VirtualClass.Infrastructure.Persistence.Repository
             return await _context.Users.SingleOrDefaultAsync(u => u.Email == email && u.PasswordHash == password);
         }
 
+        public async Task<User?> GetUserByEmailConfirmationTokenAsync(string token)
+        {
+            return await _context.Users.Include(u => u.Role)
+                                       .SingleOrDefaultAsync(u => u.EmailConfirmationToken == token);
+        }
+
         public async Task CreateUserAsync(User user)
         {
             await _context.Users.AddAsync(user);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateUserAsync(User user)
+        {
+            _context.Users.Update(user);
             await _context.SaveChangesAsync();
         }
     }

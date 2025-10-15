@@ -2,7 +2,7 @@ using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
-using VirtualClass.Application.Commands.CreateUser;
+using VirtualClass.Application.Commands.UserCommands.CreateUser;
 using VirtualClass.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);

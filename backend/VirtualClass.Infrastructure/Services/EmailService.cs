@@ -27,6 +27,7 @@ namespace VirtualClass.Infrastructure.Services
                     <p><a href='{confirmationLink}'>Confirmar Email</a></p>
                     <p>Ou copie e cole este link no seu navegador:</p>
                     <p>{confirmationLink}</p>
+                    <P>{confirmationToken}</P>
                     <p>Se você não criou esta conta, por favor ignore este email.</p>
                     <br/>
                     <p>Atenciosamente,<br/>Equipe VirtualClass</p>

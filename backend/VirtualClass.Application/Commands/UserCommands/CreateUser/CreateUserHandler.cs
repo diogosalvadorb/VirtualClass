@@ -4,7 +4,7 @@ using VirtualClass.Core.Entities;
 using VirtualClass.Core.Repository;
 using VirtualClass.Core.Services;
 
-namespace VirtualClass.Application.Commands.CreateUser
+namespace VirtualClass.Application.Commands.UserCommands.CreateUser
 {
     public class CreateUserHandler : IRequestHandler<CreateUserCommand, CreateUserViewModel>
     {
