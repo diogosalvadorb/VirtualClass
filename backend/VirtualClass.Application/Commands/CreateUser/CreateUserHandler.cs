@@ -8,12 +8,14 @@ namespace VirtualClass.Application.Commands.CreateUser
 {
     public class CreateUserHandler : IRequestHandler<CreateUserCommand, CreateUserViewModel>
     {
-        private readonly IUserRepository _repository;
+        private readonly IUserRepository _userRepository;
         private readonly IAuthService _authService;
-        public CreateUserHandler(IUserRepository repository, IAuthService authService)
+        private readonly IEmailService _emailService;
+        public CreateUserHandler(IUserRepository repository, IAuthService authService, IEmailService emailService)
         {
-            _repository = repository;
+            _userRepository = repository;
             _authService = authService;
+            _emailService = emailService;
         }
 
         public async Task<CreateUserViewModel> Handle(CreateUserCommand request, CancellationToken cancellationToken)
@@ -22,7 +24,9 @@ namespace VirtualClass.Application.Commands.CreateUser
 
             var user = new User(request.FullName, request.Email, passwordHash);
 
-            await _repository.CreateUserAsync(user);
+            await _userRepository.CreateUserAsync(user);
+
+            await _emailService.SendEmailConfirmationAsync(user.Email, user.FullName, user.EmailConfirmationToken!);
 
             return new CreateUserViewModel(user.Email);
         }
