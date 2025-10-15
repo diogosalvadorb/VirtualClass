@@ -30,6 +30,12 @@
             EmailConfirmationToken = null;
         }
 
+        public void GeneratePasswordResetToken()
+        {
+            PasswordResetToken = Guid.NewGuid().ToString();
+            PasswordResetTokenExpiry = DateTime.Now.AddHours(24);
+        }
+
         public void ResetPassword(string newPasswordHash)
         {
             PasswordHash = newPasswordHash;

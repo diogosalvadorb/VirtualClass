@@ -5,6 +5,7 @@ using System.Security.Claims;
 using VirtualClass.Application.Commands.UserCommands.ChangePassword;
 using VirtualClass.Application.Commands.UserCommands.ConfirmEmail;
 using VirtualClass.Application.Commands.UserCommands.CreateUser;
+using VirtualClass.Application.Commands.UserCommands.ForgotPassword;
 using VirtualClass.Application.Commands.UserCommands.LoginUser;
 using VirtualClass.Application.Queries.UserQueries.GetUserById;
 
@@ -80,8 +81,7 @@ namespace VirtualClass.API.Controllers
             {
                 return Unauthorized(new { message = "Usuário não autenticado." });
             }
-
-            // Usar o email do token, ignorando o que vem no body
+           
             command.Email = userEmail;
 
             if (string.IsNullOrEmpty(command.CurrentPassword) || string.IsNullOrEmpty(command.NewPassword))
@@ -97,6 +97,18 @@ namespace VirtualClass.API.Controllers
             }
 
             return Ok(new { message = "Senha alterada com sucesso!" });
+        }
+
+        [HttpPost("forgot-password")]
+        [AllowAnonymous]
+        public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordCommand command)
+        {
+            await _mediator.Send(command);
+
+            return Ok(new
+            {
+                message = "Se o email existir em nossa base, você receberá instruções para redefinir sua senha."
+            });
         }
     }
 }

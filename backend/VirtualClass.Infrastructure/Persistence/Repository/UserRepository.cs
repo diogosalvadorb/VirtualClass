@@ -17,6 +17,13 @@ namespace VirtualClass.Infrastructure.Persistence.Repository
             return await _context.Users.SingleOrDefaultAsync(u => u.Id == id);
         }
 
+        public async Task<User?> GetUserByEmailAsync(string email)
+        {
+            return await _context.Users
+                .Include(u => u.Role)
+                .SingleOrDefaultAsync(u => u.Email == email);
+        }
+
         public async Task<User?> GetUserByEmailAndPasswordAsync(string email, string password)
         {
             return await _context.Users.Include(u => u.Role).SingleOrDefaultAsync(u => u.Email == email && u.PasswordHash == password);
@@ -38,6 +45,6 @@ namespace VirtualClass.Infrastructure.Persistence.Repository
         {
             _context.Users.Update(user);
             await _context.SaveChangesAsync();
-        } 
+        }    
     }
 }

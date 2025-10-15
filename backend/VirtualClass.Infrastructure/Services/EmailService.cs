@@ -38,6 +38,32 @@ namespace VirtualClass.Infrastructure.Services
             await SendEmailAsync(toEmail, subject, body);
         }
 
+        public async Task SendPasswordResetEmailAsync(string toEmail, string userName, string resetToken)
+        {
+            var subject = "Recuperação de Senha - VirtualClass";
+            var resetLink = $"{_configuration["App:ClientUrl"]}/api/users/reset-password?token={resetToken}";
+
+            var body = $@"
+                <html>
+                <body>
+                    <h2>Olá, {userName}!</h2>
+                    <p>Recebemos uma solicitação para redefinir sua senha.</p>
+                    <p>Clique no link abaixo para criar uma nova senha:</p>
+                    <p><a href='{resetLink}'>Redefinir Senha</a></p>
+                    <p>Ou copie e cole este link no seu navegador:</p>
+                    <p>{resetLink}</p>
+                    <P>{resetToken}</P>
+                    <p>Este link expira em 24 horas.</p>
+                    <p>Se você não solicitou a redefinição de senha, por favor ignore este email.</p>
+                    <br/>
+                    <p>Atenciosamente,<br/>Equipe VirtualClass</p>
+                </body>
+                </html>
+            ";
+
+            await SendEmailAsync(toEmail, subject, body);
+        }
+
         private async Task SendEmailAsync(string toEmail, string subject, string body)
         {
             var smtpHost = _configuration["Smtp:Host"];
