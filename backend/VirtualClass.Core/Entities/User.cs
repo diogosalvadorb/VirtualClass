@@ -21,11 +21,27 @@
         public DateTime CreatedAt { get; private set; } = DateTime.UtcNow;
         public bool IsEmailConfirmed { get; private set; }
         public string? EmailConfirmationToken { get; private set; }
+        public string? PasswordResetToken { get; private set; }
+        public DateTime? PasswordResetTokenExpiry { get; private set; }
 
         public void ConfirmEmail()
         {
             IsEmailConfirmed = true;
             EmailConfirmationToken = null;
+        }
+
+        public void ResetPassword(string newPasswordHash)
+        {
+            PasswordHash = newPasswordHash;
+            PasswordResetToken = null;
+            PasswordResetTokenExpiry = null;
+        }
+
+        public bool IsPasswordResetTokenValid()
+        {
+            return PasswordResetToken != null &&
+                   PasswordResetTokenExpiry.HasValue &&
+                   PasswordResetTokenExpiry.Value > DateTime.Now;
         }
     }
 }

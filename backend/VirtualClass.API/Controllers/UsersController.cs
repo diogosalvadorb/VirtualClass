@@ -1,6 +1,8 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
+using VirtualClass.Application.Commands.UserCommands.ChangePassword;
 using VirtualClass.Application.Commands.UserCommands.ConfirmEmail;
 using VirtualClass.Application.Commands.UserCommands.CreateUser;
 using VirtualClass.Application.Commands.UserCommands.LoginUser;
@@ -67,6 +69,34 @@ namespace VirtualClass.API.Controllers
             }
 
             return Ok(new { message = "Email confirmado com sucesso! Você já pode fazer login." });
+        }
+
+        [HttpPost("change-password")]
+        public async Task<IActionResult> ChangePassword([FromBody] ChangePasswordCommand command)
+        {
+            var userEmail = User.FindFirst(ClaimTypes.Email)?.Value;
+
+            if (string.IsNullOrEmpty(userEmail))
+            {
+                return Unauthorized(new { message = "Usuário não autenticado." });
+            }
+
+            // Usar o email do token, ignorando o que vem no body
+            command.Email = userEmail;
+
+            if (string.IsNullOrEmpty(command.CurrentPassword) || string.IsNullOrEmpty(command.NewPassword))
+            {
+                return BadRequest(new { message = "Senha atual e nova senha são obrigatórias." });
+            }
+
+            var result = await _mediator.Send(command);
+
+            if (!result)
+            {
+                return BadRequest(new { message = "Senha atual incorreta." });
+            }
+
+            return Ok(new { message = "Senha alterada com sucesso!" });
         }
     }
 }
