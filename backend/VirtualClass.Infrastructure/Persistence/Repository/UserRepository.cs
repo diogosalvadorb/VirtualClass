@@ -12,15 +12,20 @@ namespace VirtualClass.Infrastructure.Persistence.Repository
             _context = context;
         }
 
-        public async Task CreateUserAsync(User user)
+        public async Task<User?> GetUserByIdAsync(Guid id)
         {
-            await _context.Users.AddAsync(user);
-            await _context.SaveChangesAsync();
+            return await _context.Users.SingleOrDefaultAsync(u => u.Id == id);
         }
 
         public async Task<User?> GetUserByEmailAndPasswordAsync(string email, string password)
         {
             return await _context.Users.SingleOrDefaultAsync(u => u.Email == email && u.PasswordHash == password);
+        }
+
+        public async Task CreateUserAsync(User user)
+        {
+            await _context.Users.AddAsync(user);
+            await _context.SaveChangesAsync();
         }
     }
 }

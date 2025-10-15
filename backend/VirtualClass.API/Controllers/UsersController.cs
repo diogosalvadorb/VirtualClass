@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using VirtualClass.Application.Commands.CreateUser;
 using VirtualClass.Application.Commands.LoginUser;
+using VirtualClass.Application.Queries.UserQueries.GetUserById;
 
 namespace VirtualClass.API.Controllers
 {
@@ -15,6 +16,21 @@ namespace VirtualClass.API.Controllers
         public UsersController(IMediator mediator)
         {
             _mediator = mediator;
+        }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetUserById(Guid id)
+        {
+            var query = new GetUserByIdQuery(id);
+
+            var user = await _mediator.Send(query);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(user);
         }
 
         [HttpPost("register")]
