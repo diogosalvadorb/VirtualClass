@@ -1,8 +1,9 @@
 ﻿using MediatR;
+using VirtualClass.Core.Results;
 
 namespace VirtualClass.Application.Commands.UserCommands.ConfirmEmail
 {
-    public class ConfirmEmailCommand : IRequest<bool>
+    public class ConfirmEmailCommand : IRequest<ServiceResult>
     {
         public ConfirmEmailCommand(string token)
         {

@@ -75,7 +75,8 @@ namespace VirtualClass.Infrastructure.Persistence.Migrations
                         .HasColumnType("nvarchar(350)");
 
                     b.Property<string>("EmailConfirmationToken")
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<string>("FullName")
                         .IsRequired()
@@ -83,11 +84,20 @@ namespace VirtualClass.Infrastructure.Persistence.Migrations
                         .HasColumnType("nvarchar(250)");
 
                     b.Property<bool>("IsEmailConfirmed")
-                        .HasColumnType("bit");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("bit")
+                        .HasDefaultValue(false);
 
                     b.Property<string>("PasswordHash")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PasswordResetToken")
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
+                    b.Property<DateTime?>("PasswordResetTokenExpiry")
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("RoleId")
                         .HasColumnType("int");

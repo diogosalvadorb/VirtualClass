@@ -13,7 +13,21 @@ namespace VirtualClass.Infrastructure.Persistence.Configuration
             builder.Property(u => u.Email).IsRequired().HasMaxLength(350);
             builder.HasIndex(u => u.Email).IsUnique();
             builder.Property(u => u.PasswordHash).IsRequired();
-            
+            builder.Property(u => u.IsEmailConfirmed)
+                .IsRequired()
+                .HasDefaultValue(false);
+
+            builder.Property(u => u.EmailConfirmationToken)
+                .HasMaxLength(500)
+                .IsRequired(false);
+
+            builder.Property(u => u.PasswordResetToken)
+                .HasMaxLength(500)
+                .IsRequired(false);
+
+            builder.Property(u => u.PasswordResetTokenExpiry)
+                .IsRequired(false);
+
             builder.HasIndex(u => u.RoleId);
             builder.HasOne(u => u.Role)
                 .WithMany(r => r.Users)

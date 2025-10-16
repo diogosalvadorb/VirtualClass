@@ -8,7 +8,7 @@
             Email = email;
             PasswordHash = passwordHash;
             CreatedAt = DateTime.Now;
-            RoleId = 2;
+            RoleId = 3;
             IsEmailConfirmed = false;
             EmailConfirmationToken = Guid.NewGuid().ToString();
         }
