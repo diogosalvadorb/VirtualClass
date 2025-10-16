@@ -1,11 +1,12 @@
 ﻿using MediatR;
 using VirtualClass.Application.ViewModel;
 using VirtualClass.Core.Repository;
+using VirtualClass.Core.Results;
 using VirtualClass.Core.Services;
 
 namespace VirtualClass.Application.Commands.UserCommands.LoginUser
 {
-    public class LoginUserHandler : IRequestHandler<LoginUserCommand, LoginUserViewModel>
+    public class LoginUserHandler : IRequestHandler<LoginUserCommand, ServiceResult<LoginUserViewModel>>
     {
         private readonly IUserRepository _userRepository;
         private readonly IAuthService _authService;
@@ -15,17 +16,38 @@ namespace VirtualClass.Application.Commands.UserCommands.LoginUser
             _authService = authService;
         }
 
-        public async Task<LoginUserViewModel> Handle(LoginUserCommand request, CancellationToken cancellationToken)
+        public async Task<ServiceResult<LoginUserViewModel>> Handle(LoginUserCommand request, CancellationToken cancellationToken)
         {
-            var passwordHash = _authService.ComputerSha256Hash(request.Password);
+            try
+            {
+                var passwordHash = _authService.ComputerSha256Hash(request.Password);
+                var user = await _userRepository.GetUserByEmailAndPasswordAsync(request.Email, passwordHash);
 
-            var user = await _userRepository.GetUserByEmailAndPasswordAsync(request.Email, passwordHash);
+                if (user == null)
+                {
+                    return ServiceResult<LoginUserViewModel>.Error(
+                        "Email ou senha inválidos.",
+                        ErrorTypeEnum.Unauthorized);
+                }
 
-            if (user == null) { return null!; }
+                if (!user.IsEmailConfirmed)
+                {
+                    return ServiceResult<LoginUserViewModel>.Error(
+                        "Email não confirmado. Verifique sua caixa de entrada.",
+                        ErrorTypeEnum.Unauthorized);
+                }
 
-            var token = _authService.GenerateTokenJwt(user.Email, user.Role.Name);
+                var token = _authService.GenerateTokenJwt(user.Email, user.Role.Name);
 
-            return new LoginUserViewModel(user.FullName, user.Role.Name, user.Email, token);
+                return ServiceResult<LoginUserViewModel>.Success(
+                    new LoginUserViewModel(user.FullName, user.Role.Name, user.Email, token));            
+            }
+            catch (Exception ex)
+            {
+                return ServiceResult<LoginUserViewModel>.Error(
+                                    $"Erro ao realizar login: {ex.Message}",
+                                    ErrorTypeEnum.Failure);
+            }          
         }
     }
 }

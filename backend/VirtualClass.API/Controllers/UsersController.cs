@@ -28,15 +28,18 @@ namespace VirtualClass.API.Controllers
         public async Task<IActionResult> GetUserById(Guid id)
         {
             var query = new GetUserByIdQuery(id);
+            var result = await _mediator.Send(query);
 
-            var user = await _mediator.Send(query);
-
-            if (user == null)
+            if (!result.IsSuccess)
             {
-                return NotFound();
+                return result.ErrorTypeEnum switch
+                {
+                    ErrorTypeEnum.NotFound => NotFound(new { message = result.Message }),
+                    _ => BadRequest(new { message = result.Message })
+                };
             }
 
-            return Ok(user);
+            return Ok(result.Data);
         }
 
         [HttpPost("register")]
@@ -65,12 +68,18 @@ namespace VirtualClass.API.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Login([FromBody] LoginUserCommand command)
         {
-            var login = await _mediator.Send(command);
-            if (login == null)
+            var result = await _mediator.Send(command);
+
+            if (!result.IsSuccess)
             {
-                return BadRequest();
+                return result.ErrorTypeEnum switch
+                {
+                    ErrorTypeEnum.Unauthorized => Unauthorized(new { message = result.Message }),
+                    _ => StatusCode(500, new { message = result.Message })
+                };
             }
-            return Ok(login);
+
+            return Ok(result.Data);
         }
 
         [HttpGet("confirm-email")]
@@ -79,9 +88,14 @@ namespace VirtualClass.API.Controllers
         {
             var command = new ConfirmEmailCommand(token);
             var result = await _mediator.Send(command);
-            if (!result)
+
+            if (!result.IsSuccess)
             {
-                return BadRequest("Token inválido ou expirado.");
+                return result.ErrorTypeEnum switch
+                {
+                    ErrorTypeEnum.NotFound => BadRequest(new { message = result.Message }),
+                    _ => BadRequest(new { message = result.Message })
+                };
             }
 
             return Ok(new { message = "Email confirmado com sucesso! Você já pode fazer login." });
@@ -96,19 +110,19 @@ namespace VirtualClass.API.Controllers
             {
                 return Unauthorized(new { message = "Usuário não autenticado." });
             }
-           
-            command.Email = userEmail;
 
-            if (string.IsNullOrEmpty(command.CurrentPassword) || string.IsNullOrEmpty(command.NewPassword))
-            {
-                return BadRequest(new { message = "Senha atual e nova senha são obrigatórias." });
-            }
+            command.Email = userEmail;
 
             var result = await _mediator.Send(command);
 
-            if (!result)
+            if (!result.IsSuccess)
             {
-                return BadRequest(new { message = "Senha atual incorreta." });
+                return result.ErrorTypeEnum switch
+                {
+                    ErrorTypeEnum.Unauthorized => Unauthorized(new { message = result.Message }),
+                    ErrorTypeEnum.Validation => BadRequest(new { message = result.Message }),
+                    _ => StatusCode(500, new { message = result.Message })
+                };
             }
 
             return Ok(new { message = "Senha alterada com sucesso!" });
@@ -118,11 +132,16 @@ namespace VirtualClass.API.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> ForgotPassword([FromBody] ForgotPasswordCommand command)
         {
-            await _mediator.Send(command);
+            var result = await _mediator.Send(command);
+
+            if (!result.IsSuccess)
+            {
+                return StatusCode(500, new { message = result.Message });
+            }
 
             return Ok(new
             {
-                message = "Se o email existir em nossa base, você receberá instruções para redefinir sua senha."
+                message = "Email enviado! você receberá instruções para redefinir sua senha."
             });
         }
 
@@ -137,9 +156,14 @@ namespace VirtualClass.API.Controllers
 
             var result = await _mediator.Send(command);
 
-            if (!result)
+            if (!result.IsSuccess)
             {
-                return BadRequest(new { message = "Token inválido ou expirado." });
+                return result.ErrorTypeEnum switch
+                {
+                    ErrorTypeEnum.NotFound => BadRequest(new { message = result.Message }),
+                    ErrorTypeEnum.Validation => BadRequest(new { message = result.Message }),
+                    _ => StatusCode(500, new { message = result.Message })
+                };
             }
 
             return Ok(new { message = "Senha recuperada com sucesso! Você já pode fazer login." });

@@ -1,14 +1,10 @@
 ﻿using MediatR;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using VirtualClass.Application.ViewModel;
+using VirtualClass.Core.Results;
 
 namespace VirtualClass.Application.Queries.UserQueries.GetUserById
 {
-    public class GetUserByIdQuery : IRequest<UserViewModel>
+    public class GetUserByIdQuery : IRequest<ServiceResult<UserViewModel>>
     {
         public GetUserByIdQuery(Guid id)
         {

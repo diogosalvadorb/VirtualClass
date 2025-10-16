@@ -1,10 +1,11 @@
 ﻿using MediatR;
 using VirtualClass.Core.Repository;
+using VirtualClass.Core.Results;
 using VirtualClass.Core.Services;
 
 namespace VirtualClass.Application.Commands.UserCommands.ChangePassword
 {
-    public class ChangePasswordHandler : IRequestHandler<ChangePasswordCommand, bool>
+    public class ChangePasswordHandler : IRequestHandler<ChangePasswordCommand, ServiceResult>
     {
         private readonly IUserRepository _userRepository;   
         private readonly IAuthService _authService;
@@ -14,22 +15,31 @@ namespace VirtualClass.Application.Commands.UserCommands.ChangePassword
             _authService = authService;
         }
 
-        public async Task<bool> Handle(ChangePasswordCommand request, CancellationToken cancellationToken)
+        public async Task<ServiceResult> Handle(ChangePasswordCommand request, CancellationToken cancellationToken)
         {
-            var currentPasswordHash = _authService.ComputerSha256Hash(request.CurrentPassword);
-            var user = await _userRepository.GetUserByEmailAndPasswordAsync(request.Email, currentPasswordHash);
-
-            if (user == null)
+            try
             {
-                return false;
+                var currentPasswordHash = _authService.ComputerSha256Hash(request.CurrentPassword);
+                var user = await _userRepository.GetUserByEmailAndPasswordAsync(request.Email, currentPasswordHash);
+
+                if (user == null)
+                {
+                    return ServiceResult.Error("Senha atual incorreta.", ErrorTypeEnum.Unauthorized); 
+                }
+
+
+                var newPasswordHash = _authService.ComputerSha256Hash(request.NewPassword);
+                user.ResetPassword(newPasswordHash);
+
+                await _userRepository.UpdateUserAsync(user);
+
+                return ServiceResult.Success();
             }
-
-            var newPasswordHash = _authService.ComputerSha256Hash(request.NewPassword);
-            user.ResetPassword(newPasswordHash);
-
-            await _userRepository.UpdateUserAsync(user);
-
-            return true;
+            catch (Exception ex)
+            {
+                return ServiceResult.Error($"Erro ao alterar senha: {ex.Message}", ErrorTypeEnum.Failure);
+            }
+            
         }
     }
 }

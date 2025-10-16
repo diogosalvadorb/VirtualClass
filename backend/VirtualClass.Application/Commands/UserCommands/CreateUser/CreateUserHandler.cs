@@ -36,10 +36,10 @@ namespace VirtualClass.Application.Commands.UserCommands.CreateUser
 
                 await _userRepository.CreateUserAsync(user);
 
-                var emailSent = await _emailService.SendEmailConfirmationAsync(user.Email, user.FullName, user.EmailConfirmationToken!);
+                var emailSend = await _emailService.SendEmailConfirmationAsync(user.Email, user.FullName, user.EmailConfirmationToken!);
 
                 //emails com falha de envio enviar para uma fila de reenvio (BackGround Job)
-                if (!emailSent)
+                if (!emailSend)
                 {
                     return ServiceResult<CreateUserViewModel>.Error(
                         "Usuário criado, mas não foi possível enviar o email de confirmação.",
