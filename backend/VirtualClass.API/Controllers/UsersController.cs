@@ -9,6 +9,7 @@ using VirtualClass.Application.Commands.UserCommands.ForgotPassword;
 using VirtualClass.Application.Commands.UserCommands.LoginUser;
 using VirtualClass.Application.Commands.UserCommands.RecoverPassword;
 using VirtualClass.Application.Queries.UserQueries.GetUserById;
+using VirtualClass.Core.Results;
 
 namespace VirtualClass.API.Controllers
 {
@@ -42,9 +43,22 @@ namespace VirtualClass.API.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> CreateUser([FromBody] CreateUserCommand command)
         {
-            var user = await _mediator.Send(command);
+            var result = await _mediator.Send(command);
 
-            return Ok(user);
+            if (!result.IsSuccess)
+            {
+                return result.ErrorTypeEnum switch
+                {
+                    ErrorTypeEnum.Validation => BadRequest(new { message = result.Message }),
+                    _ => StatusCode(500, new { message = result.Message })
+                };
+            }
+
+            return Ok(new
+            {
+                message = "Usuário criado com sucesso! Verifique seu email para confirmar o cadastro.",
+                data = result.Data
+            });
         }
 
         [HttpPost("Login")]

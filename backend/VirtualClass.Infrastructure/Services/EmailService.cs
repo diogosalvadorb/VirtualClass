@@ -13,55 +13,75 @@ namespace VirtualClass.Infrastructure.Services
             _configuration = configuration;
         }
 
-        public async Task SendEmailConfirmationAsync(string toEmail, string userName, string confirmationToken)
+        public async Task<bool> SendEmailConfirmationAsync(string toEmail, string userName, string confirmationToken)
         {
-            var subject = "Confirme seu email - VirtualClass";
-            var confirmationLink = $"{_configuration["App:ClientUrl"]}/api/users/confirm-email?token={confirmationToken}";
+            try
+            {
+                var subject = "Confirme seu email - VirtualClass";
+                var confirmationLink = $"{_configuration["App:ClientUrl"]}/api/users/confirm-email?token={confirmationToken}";
 
-            var body = $@"
-                <html>
-                <body>
-                    <h2>Olá, {userName}!</h2>
-                    <p>Obrigado por se registrar no VirtualClass.</p>
-                    <p>Por favor, confirme seu email clicando no link abaixo:</p>
-                    <p><a href='{confirmationLink}'>Confirmar Email</a></p>
-                    <p>Ou copie e cole este link no seu navegador:</p>
-                    <p>{confirmationLink}</p>
-                    <P>{confirmationToken}</P>
-                    <p>Se você não criou esta conta, por favor ignore este email.</p>
-                    <br/>
-                    <p>Atenciosamente,<br/>Equipe VirtualClass</p>
-                </body>
-                </html>
-            ";
+                var body = $@"
+                    <html>
+                    <body>
+                     <h2>Olá, {userName}!</h2>
+                        <p>Obrigado por se registrar no VirtualClass.</p>
+                        <p>Por favor, confirme seu email clicando no link abaixo:</p>
+                            <p><a href='{confirmationLink}'>Confirmar Email</a></p>
+                        <p>Ou copie e cole este link no seu navegador:</p>
+                        <p>{confirmationLink}</p>
+                        <P>{confirmationToken}</P>
+                        <p>Se você não criou esta conta, por favor ignore este email.</p>
+                        <br/>
+                        <p>Atenciosamente,<br/>Equipe VirtualClass</p>
+                    </body>
+                    </html>
+                ";
 
-            await SendEmailAsync(toEmail, subject, body);
+                await SendEmailAsync(toEmail, subject, body);
+
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+
         }
 
-        public async Task SendPasswordResetEmailAsync(string toEmail, string userName, string resetToken)
+        public async Task<bool> SendPasswordResetEmailAsync(string toEmail, string userName, string resetToken)
         {
-            var subject = "Recuperação de Senha - VirtualClass";
-            var resetLink = $"{_configuration["App:ClientUrl"]}/api/users/reset-password?token={resetToken}";
+            try
+            {
+                var subject = "Recuperação de Senha - VirtualClass";
+                var resetLink = $"{_configuration["App:ClientUrl"]}/api/users/reset-password?token={resetToken}";
 
-            var body = $@"
-                <html>
-                <body>
-                    <h2>Olá, {userName}!</h2>
-                    <p>Recebemos uma solicitação para redefinir sua senha.</p>
-                    <p>Clique no link abaixo para criar uma nova senha:</p>
-                    <p><a href='{resetLink}'>Redefinir Senha</a></p>
-                    <p>Ou copie e cole este link no seu navegador:</p>
-                    <p>{resetLink}</p>
-                    <P>{resetToken}</P>
-                    <p>Este link expira em 24 horas.</p>
-                    <p>Se você não solicitou a redefinição de senha, por favor ignore este email.</p>
-                    <br/>
-                    <p>Atenciosamente,<br/>Equipe VirtualClass</p>
-                </body>
-                </html>
-            ";
+                var body = $@"
+                     <html>
+                     <body>
+                        <h2>Olá, {userName}!</h2>
+                        <p>Recebemos uma solicitação para redefinir sua senha.</p>
+                        <p>Clique no link abaixo para criar uma nova senha:</p>
+                        <p><a href='{resetLink}'>Redefinir Senha</a></p>
+                        <p>Ou copie e cole este link no seu navegador:</p>
+                        <p>{resetLink}</p>
+                        <P>{resetToken}</P>
+                        <p>Este link expira em 24 horas.</p>
+                        <p>Se você não solicitou a redefinição de senha, por favor ignore este email.</p>
+                       <br/>
+                        <p>Atenciosamente,<br/>Equipe VirtualClass</p>
+                    </body>
+                    </html>
+                ";
 
-            await SendEmailAsync(toEmail, subject, body);
+                await SendEmailAsync(toEmail, subject, body);
+
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+            
         }
 
         private async Task SendEmailAsync(string toEmail, string subject, string body)

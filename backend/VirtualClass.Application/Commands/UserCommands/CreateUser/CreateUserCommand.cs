@@ -1,9 +1,10 @@
 ﻿using MediatR;
 using VirtualClass.Application.ViewModel;
+using VirtualClass.Core.Results;
 
 namespace VirtualClass.Application.Commands.UserCommands.CreateUser
 {
-    public class CreateUserCommand : IRequest<CreateUserViewModel>
+    public class CreateUserCommand : IRequest<ServiceResult<CreateUserViewModel>>
     {
         public CreateUserCommand(string fullName, string email, string password)
         {
