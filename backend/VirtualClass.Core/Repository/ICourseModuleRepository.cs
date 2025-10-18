@@ -1,12 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using VirtualClass.Core.Entities;
 
 namespace VirtualClass.Core.Repository
 {
-    internal class ICourseModuleRepository
+    public interface ICourseModuleRepository
     {
+        Task<CourseModule?> GetModuleByIdAsync(Guid id);
+        Task<CourseModule?> GetModuleWithLessonsAsync(Guid id);
+        Task<List<CourseModule>> GetModulesByCourseIdAsync(Guid courseId);
+        Task CreateModuleAsync(CourseModule module);
+        Task UpdateModuleAsync(CourseModule module);
+        Task DeleteModuleAsync(CourseModule module);
     }
 }
