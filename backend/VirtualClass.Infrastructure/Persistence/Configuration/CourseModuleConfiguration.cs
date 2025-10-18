@@ -4,9 +4,9 @@ using VirtualClass.Core.Entities;
 
 namespace VirtualClass.Infrastructure.Persistence.Configuration
 {
-    public class ModuleConfiguration : IEntityTypeConfiguration<Module>
+    public class CourseModuleConfiguration : IEntityTypeConfiguration<CourseModule>
     {
-        public void Configure(EntityTypeBuilder<Module> builder)
+        public void Configure(EntityTypeBuilder<CourseModule> builder)
         {
             builder.HasKey(m => m.Id);
 
@@ -29,8 +29,8 @@ namespace VirtualClass.Infrastructure.Persistence.Configuration
                 .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasMany(m => m.Lessons)
-                .WithOne(l => l.Module)
-                .HasForeignKey(l => l.ModuleId)
+                .WithOne(l => l.CourseModule)
+                .HasForeignKey(l => l.CourseModuleId)
                 .OnDelete(DeleteBehavior.Cascade);
         }
     }

@@ -1,6 +1,4 @@
-﻿using System.Reflection;
-
-namespace VirtualClass.Core.Entities
+﻿namespace VirtualClass.Core.Entities
 {
     public class Course : BaseEntity
     {
@@ -12,7 +10,7 @@ namespace VirtualClass.Core.Entities
         public Teacher Teacher { get; private set; } = null!;
         public DateTime CreatedAt { get; private set; }
         public bool IsActive { get; private set; }
-        public ICollection<Module> Modules { get; private set; } = new List<Module>();
+        public ICollection<CourseModule> Modules { get; private set; } = new List<CourseModule>();
         public ICollection<Enrollment> Enrollments { get; private set; } = new List<Enrollment>();
         public ICollection<Payment> Payments { get; private set; } = new List<Payment>();
     }

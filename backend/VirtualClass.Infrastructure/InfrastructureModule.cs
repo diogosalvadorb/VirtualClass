@@ -21,6 +21,7 @@ namespace VirtualClass.Infrastructure
             services.AddSingleton<IEmailService, EmailService>();  
             services.AddScoped<IAuthService, AuthService>();
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<ITeacherRepository, TeacherRepository>();
 
             return services;
         }   

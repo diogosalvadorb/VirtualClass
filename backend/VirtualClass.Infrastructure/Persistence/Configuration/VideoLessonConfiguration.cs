@@ -25,11 +25,11 @@ namespace VirtualClass.Infrastructure.Persistence.Configuration
             builder.Property(l => l.Order)
                 .IsRequired();
 
-            builder.HasIndex(l => new { l.ModuleId, l.Order });
+            builder.HasIndex(l => new { l.CourseModuleId, l.Order });
 
-            builder.HasOne(l => l.Module)
+            builder.HasOne(l => l.CourseModule)
                 .WithMany(m => m.Lessons)
-                .HasForeignKey(l => l.ModuleId)
+                .HasForeignKey(l => l.CourseModuleId)
                 .OnDelete(DeleteBehavior.Cascade);
         }
     }
