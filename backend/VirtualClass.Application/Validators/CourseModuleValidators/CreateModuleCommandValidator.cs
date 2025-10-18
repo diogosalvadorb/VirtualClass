@@ -1,8 +1,9 @@
 ﻿using FluentValidation;
+using VirtualClass.Application.Commands.CourseModuleCommands.CreateCourseModule;
 
 namespace VirtualClass.Application.Validators.CourseModuleValidators
 {
-    public class CreateModuleCommandValidator : AbstractValidator<CreateModuleCommand>
+    public class CreateModuleCommandValidator : AbstractValidator<CreateCourseModuleCommand>
     {
         public CreateModuleCommandValidator()
         {

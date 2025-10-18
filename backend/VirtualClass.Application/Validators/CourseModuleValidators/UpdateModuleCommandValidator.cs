@@ -1,8 +1,9 @@
 ﻿using FluentValidation;
+using VirtualClass.Application.Commands.CourseModuleCommands.UpdateCourseModule;
 
 namespace VirtualClass.Application.Validators.CourseModuleValidators
 {
-    public class UpdateModuleCommandValidator : AbstractValidator<UpdateModuleCommand>
+    public class UpdateModuleCommandValidator : AbstractValidator<UpdateCourseModuleCommand>
     {
         public UpdateModuleCommandValidator()
         {
