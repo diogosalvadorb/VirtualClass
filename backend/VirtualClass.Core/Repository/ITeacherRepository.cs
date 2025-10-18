@@ -9,5 +9,6 @@ namespace VirtualClass.Core.Repository
         Task<List<Teacher>> GetAllTeachersAsync();
         Task CreateTeacherAsync(Teacher teacher);
         Task UpdateTeacherAsync(Teacher teacher);
+        Task DeleteTeacherAsync(Teacher teacher);
     }
 }

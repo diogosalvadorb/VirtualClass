@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using VirtualClass.Application.Commands.TeacherCommands.CreateTeacher;
+using VirtualClass.Application.Commands.TeacherCommands.DeleteTeacher;
 using VirtualClass.Application.Commands.TeacherCommands.UpdateTeacher;
 using VirtualClass.Application.Queries.TeacherQueries.GetAllTeachers;
 using VirtualClass.Application.Queries.TeacherQueries.GetTeacherById;
@@ -95,6 +96,26 @@ namespace VirtualClass.API.Controllers
             }
 
             return Ok(new { message = "Professor atualizado com sucesso!" });
+        }
+
+        [HttpDelete("{id}")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> DeleteTeacher(Guid id)
+        {
+            var command = new DeleteTeacherCommand(id);
+            var result = await _mediator.Send(command);
+
+            if (!result.IsSuccess)
+            {
+                return result.ErrorTypeEnum switch
+                {
+                    ErrorTypeEnum.NotFound => NotFound(new { message = result.Message }),
+                    ErrorTypeEnum.Validation => BadRequest(new { message = result.Message }),
+                    _ => StatusCode(500, new { message = result.Message })
+                };
+            }
+
+            return Ok(new { message = "Professor excluído com sucesso!" });
         }
     }
 }

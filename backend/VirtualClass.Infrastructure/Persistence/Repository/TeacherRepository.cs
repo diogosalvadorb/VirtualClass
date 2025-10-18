@@ -41,10 +41,16 @@ namespace VirtualClass.Infrastructure.Persistence.Repository
             await _context.Teachers.AddAsync(teacher);  
             await _context.SaveChangesAsync();
         }
-
+        
         public async Task UpdateTeacherAsync(Teacher teacher)
         {
             _context.Teachers.Update(teacher);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeleteTeacherAsync(Teacher teacher)
+        {
+            _context.Teachers.Remove(teacher);
             await _context.SaveChangesAsync();
         }
     }
