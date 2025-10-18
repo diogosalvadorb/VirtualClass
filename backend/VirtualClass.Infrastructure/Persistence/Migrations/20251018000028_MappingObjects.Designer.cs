@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using VirtualClass.Infrastructure.Persistence;
 
@@ -11,9 +12,11 @@ using VirtualClass.Infrastructure.Persistence;
 namespace VirtualClass.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(VirtualClassDbContext))]
-    partial class VirtualClassDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251018000028_MappingObjects")]
+    partial class MappingObjects
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
